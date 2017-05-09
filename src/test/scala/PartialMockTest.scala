@@ -1,9 +1,8 @@
-import com.google.inject.{AbstractModule, Guice}
+import com.google.inject._
 import net.codingwell.scalaguice.ScalaModule
 import org.scalatest.{FunSpec, Matchers}
 import org.scalatest.mockito.MockitoSugar
 import org.mockito.Mockito._
-
 /**
   * Created by ASrivastava on 4/29/17.
   */
@@ -29,7 +28,25 @@ class TestModule extends AbstractModule with ScalaModule with MockitoSugar {
       val realobject = injector.getInstance(classOf[TestPartialMock])
       val x = spy(realobject)
       when(x.test3()).thenReturn("I am mocked")
-      when(x.workHorse()).thenCallRealMethod()
       bind(classOf[TestPartialMock]).toInstance(x)
    }
 }
+
+//class TestModule extends AbstractModule with ScalaModule with MockitoSugar {
+//   override def configure() = {
+//      bind[TestPartialMock].toProvider(new TestPartialMockProvider({ x =>
+//         when(x.test3()).thenReturn("I am mocked")
+//      }))
+//   }
+//}
+//
+//class TestPartialMockProvider(f: TestPartialMock => Unit) extends Provider[TestPartialMock] {
+//   @Inject var injector : Injector = _
+//   override def get() : TestPartialMock = {
+//      import net.codingwell.scalaguice.InjectorExtensions._
+//      val instance = new TestPartialMock(injector.instance[Test1], injector.instance[Test2])
+//      val x = spy(instance)
+//      f(x)
+//      x
+//   }
+//}
